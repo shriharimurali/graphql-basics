@@ -25,7 +25,7 @@ const Query = {
         return ctx.posts.filter(p => p.published === args.isPublished);
     },
     comments(parent, args, ctx, info) {
-        return comments;
+        return ctx.comments;
     }
 };
 

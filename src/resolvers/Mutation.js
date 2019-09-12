@@ -14,6 +14,32 @@ const Mutation = {
         ctx.users.push(user);
         return user;
     },
+    updateUser(parent, args, ctx, info) {
+        const findUser = ctx.users.find(user => user.id === args.id);
+        if (!findUser) {
+            throw new Error('User Not Found!');
+        }
+
+        if (typeof args.data.email === 'string') {
+            const emailTaken = ctx.users.some(user => user.email === args.data.email);
+
+            if (emailTaken) {
+                throw new Error('Email in Use!');
+            }
+
+            findUser.email = args.data.email;
+        }
+
+        if (typeof args.data.name === 'string') {
+            findUser.name = args.data.name
+        }
+
+        if (typeof args.data.age !== 'undefined') {
+            findUser.age = args.data.age;
+        }
+
+        return findUser;
+    },
     deleteUser(parent, args, ctx, info) {
         const findUserIndex = ctx.users.findIndex(user => user.id === args.id);
         if (findUserIndex === -1) {
@@ -43,6 +69,29 @@ const Mutation = {
         ctx.posts.push(post);
         return post;
     },
+    updatePost(parent, args, ctx, info) {
+        const postFound = ctx.posts.find(post => post.id === args.id);
+        if (!postFound) {
+            throw new Error(" Post not Exits!");
+        }
+
+        if (typeof args.data.title === 'string') {
+            const post = ctx.posts.some(post => post.title === args.data.title);
+            if (post) {
+                throw new Error('Post already Exits');
+            }
+            postFound.title = args.data.title;
+        }
+
+        if (typeof args.data.body === 'string') {
+            postFound.body = args.data.body;
+        }
+        if (typeof args.data.body === 'boolean') {
+            postFound.published = args.data.published;
+        }
+
+        return postFound;
+    },
     createComment(parent, args, ctx, info) {
         const userFound = ctx.users.some(user => user.id === args.data.author);
         const postFound = ctx.posts.some(post => post.id === args.data.post && post.published);
@@ -58,6 +107,19 @@ const Mutation = {
 
         ctx.comments.push(comment);
         return comment;
+    },
+    updateComment(parent, args, ctx, info) {
+        const commentFound = ctx.comments.find(comment => comment.id === args.id);
+
+        if (!commentFound) {
+            throw new Error('Comment Not Found!');
+        }
+
+        if (typeof args.data.text === 'string') {
+            commentFound.text = args.data.text
+        }
+
+        return commentFound;
     }
 };
 

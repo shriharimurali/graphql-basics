@@ -56,4 +56,4 @@ const comments = [{
     post: '3'
 }];
 
-export default { users, posts, comments };
+export { users, posts, comments };
